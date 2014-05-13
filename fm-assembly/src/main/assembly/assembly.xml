@@ -1,0 +1,125 @@
+<assembly
+        xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+    <id>distribution</id>    
+    <formats>
+        <format>dir</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <!--<baseDirectory>${fullVersion}</baseDirectory>-->
+    
+    <!--<moduleSets>-->
+
+        <!--<moduleSet>-->
+            <!--<useAllReactorProjects>true</useAllReactorProjects>-->
+            <!--&lt;!&ndash;<includes>&ndash;&gt;-->
+                <!--&lt;!&ndash;<include>${project.groupId}:*-ear</include>&ndash;&gt;-->
+                <!--&lt;!&ndash;<include>${project.groupId}:fm-common</include>&ndash;&gt;-->
+                <!--&lt;!&ndash;<include>${project.groupId}:emulator-nexmo</include>&ndash;&gt;-->
+            <!--&lt;!&ndash;</includes>&ndash;&gt;-->
+            <!--<binaries>-->
+                <!--<outputDirectory>distrib</outputDirectory>-->
+                <!--<outputFileNameMapping>${module.build.finalName}.${module.extension}</outputFileNameMapping>-->
+                <!--<unpack>false</unpack>  -->
+            <!--</binaries>-->
+        <!--</moduleSet>-->
+              <!---->
+        <!--<moduleSet>-->
+            <!--<useAllReactorProjects>true</useAllReactorProjects>-->
+                <!--<includes>-->
+                    <!--<include>${project.groupId}:jedi-jboss-lib</include>-->
+                <!--</includes>-->
+            <!--<binaries>-->
+                <!--<outputDirectory>sharedlib</outputDirectory>-->
+                <!--<outputFileNameMapping>${module.build.finalName}.${module.extension}</outputFileNameMapping>-->
+                <!--<unpack>false</unpack>  -->
+            <!--</binaries>-->
+        <!--</moduleSet>-->
+   <!---->
+    <!--</moduleSets> -->
+    
+    <fileSets>
+        <fileSet>
+            <directory>../localStorage</directory>
+            <outputDirectory>localStorage</outputDirectory>
+            <filtered>false</filtered>
+            <fileMode>0644</fileMode>            
+        </fileSet>
+        <fileSet>
+            <directory>WEB-INF</directory>
+            <outputDirectory>WEB-INF</outputDirectory>
+            <filtered>false</filtered>
+            <fileMode>0644</fileMode>
+        </fileSet>
+        <!-- For coverage collection only -->
+        <!--<fileSet>-->
+            <!--<directory>${coverage.data.path}</directory>-->
+            <!--<includes>-->
+                <!--<include>*.ser</include>-->
+            <!--</includes>-->
+            <!--<outputDirectory>localStorage</outputDirectory>-->
+            <!--<filtered>false</filtered>-->
+            <!--<fileMode>0644</fileMode>            -->
+        <!--</fileSet> -->
+    </fileSets>
+       
+    <!--<dependencySets>-->
+        <!--<dependencySet>-->
+            <!--<outputDirectory>sharedlib</outputDirectory>-->
+            <!--<scope>provided</scope>-->
+            <!--<useTransitiveFiltering>true</useTransitiveFiltering>-->
+            <!--<excludes>-->
+              <!--&lt;!&ndash; Libraries provided by JBoss &ndash;&gt;-->
+              <!--<exclude>javax.*:*</exclude>-->
+              <!--<exclude>jboss:*</exclude>-->
+              <!--<exclude>org.jboss.client:*</exclude>-->
+              <!--<exclude>jboss.web:*</exclude>-->
+              <!--<exclude>commons-collections:*</exclude>-->
+              <!--<exclude>commons-httpclient:*</exclude>-->
+              <!--<exclude>commons-codec:*</exclude>-->
+              <!--<exclude>commons-beanutils:commons-beanutils-core</exclude>-->
+
+              <!--&lt;!&ndash;commons-logging stuff&ndash;&gt;-->
+              <!--<exclude>commons-logging:*</exclude>-->
+              <!--<exclude>avalon-framework:*</exclude>-->
+              <!--<exclude>logkit:*</exclude>              -->
+
+              <!--<exclude>com.ringcentral.jedi:jedi-common</exclude>-->
+              <!--<exclude>com.ringcentral:jawin-native:*</exclude>-->
+            <!--</excludes>               -->
+        <!--</dependencySet>-->
+        <!--<dependencySet>-->
+            <!--<outputDirectory>native</outputDirectory>-->
+            <!--<scope>runtime</scope>-->
+            <!--<useTransitiveFiltering>false</useTransitiveFiltering>-->
+            <!--<includes>-->
+              <!--<include>com.ringcentral:jawin-native:*</include>-->
+            <!--</includes>-->
+        <!--</dependencySet>-->
+        <!--<dependencySet>-->
+            <!--<outputDirectory>sharedlib</outputDirectory>-->
+            <!--<scope>runtime</scope>-->
+            <!--<useTransitiveFiltering>false</useTransitiveFiltering>-->
+            <!--<includes>-->
+              <!--<include>commons-configuration:commons-configuration</include>-->
+              <!--<include>commons-lang:commons-lang</include>-->
+            <!--</includes>-->
+        <!--</dependencySet>-->
+        <!--<dependencySet>-->
+            <!--<outputDirectory>scripts</outputDirectory>-->
+            <!--<scope>runtime</scope>-->
+            <!--<useTransitiveFiltering>false</useTransitiveFiltering>-->
+            <!--<includes>-->
+              <!--<include>com.ringcentral.builder:rc-getiniproperty</include>-->
+              <!--<include>commons-configuration:commons-configuration</include>-->
+              <!--<include>ant-contrib:ant-contrib</include>-->
+              <!--<include>commons-collections:commons-collections</include>-->
+              <!--<include>commons-lang:commons-lang</include>-->
+              <!--<include>commons-logging:commons-logging</include>-->
+            <!--</includes>-->
+        <!--</dependencySet>-->
+
+    <!--</dependencySets>-->
+    
+</assembly>

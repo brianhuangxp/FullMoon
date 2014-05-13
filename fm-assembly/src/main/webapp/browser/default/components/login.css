@@ -1,0 +1,8 @@
+.fm-login-form {
+    width: 300px;
+    margin: 0 auto;
+}
+
+.fm-login-form .form-control {
+    margin: 12px 0;
+}

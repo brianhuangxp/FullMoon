@@ -1,0 +1,23 @@
+<div fm-css="post-login">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header"><a class="navbar-brand" href="#">Full Moon</a></div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="#/m1">m1</a></li>
+                    <li><a href="#/manageUsers" require-admin class="ng-hide">manage users</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="javascript:void(0)">Welcome: {{userName}}</a></li>
+                    <li><a ng-click="logOut()">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <ng-view/>
+        </div>
+
+    </div>
+</div>

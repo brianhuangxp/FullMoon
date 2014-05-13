@@ -1,0 +1,56 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+
+	<context:component-scan base-package="com.ringcentral.fullmoon.mvc"/>
+
+	<mvc:annotation-driven />
+	
+	<!--<mvc:interceptors>-->
+      	<!--<bean class="com.ringcentral.fullmoon.web.interceptor.FMAuthorInterceptor">-->
+      		<!--&lt;!&ndash;<property name="mappingURL">&ndash;&gt;-->
+      			<!--&lt;!&ndash;<list>&ndash;&gt;-->
+      				<!--&lt;!&ndash;&lt;!&ndash;<value>.*\.js</value>&ndash;&gt;&ndash;&gt;-->
+      				<!--&lt;!&ndash;&lt;!&ndash;<value>.*\.html</value>&ndash;&gt;&ndash;&gt;-->
+      				<!--&lt;!&ndash;&lt;!&ndash;<value>.*\.action</value>&ndash;&gt;&ndash;&gt;-->
+                    <!--&lt;!&ndash;<value>.*/json/*</value>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<value>.*/system/*</value>&ndash;&gt;-->
+      			<!--&lt;!&ndash;</list>&ndash;&gt;-->
+      		<!--&lt;!&ndash;</property>&ndash;&gt;-->
+			<!--<property name="checkAttribute" value="sessionUser"/>-->
+            <!--<property name="failPage" value="login.view"/>-->
+      	<!--</bean>-->
+    <!--</mvc:interceptors>-->
+
+
+	
+	
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/views/"/>
+        <!--<property name="prefix" value="/test/views/"/>-->
+		<property name="suffix" value=".jsp"/>
+	</bean>
+
+	<mvc:resources mapping="/resources/**" location="/browser/default/_resources/"/>
+	<mvc:resources mapping="/components/**" location="/browser/default/components/"/>
+
+
+    <!--<mvc:interceptors>-->
+        <!--<mvc:interceptor>-->
+            <!--<mvc:mapping path="/json/**" />-->
+            <!--<mvc:mapping path="/system/**" />-->
+            <!--<bean class="com.ringcentraltral.web.interceptor.LoginInterceptor"/>-->
+        <!--</mvc:interceptor>-->
+        <!--<mvc:interceptor>-->
+                    <!--<mvc:mapping path="/json/**" />-->
+                    <!--<bean class="com.ringcentraltral.web.interceptor.AjaxInterceptor"/>-->
+        <!--</mvc:interceptor>-->
+    <!--</mvc:interceptors>-->
+
+	<mvc:default-servlet-handler />
+
+</beans>

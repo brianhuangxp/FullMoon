@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This is an unmanaged datasource. It should be used for proofs of concept 
+   or testing only. It uses H2, an in memory database that ships with JBoss 
+   AS. -->
+<datasources xmlns="http://www.jboss.org/ironjacamar/schema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://www.jboss.org/ironjacamar/schema http://docs.jboss.org/ironjacamar/schema/datasources_1_0.xsd">
+   <!-- The datasource is bound into JNDI at this location. We reference 
+      this in META-INF/persistence.xml -->
+    <!--<datasource jndi-name="java:jboss/datasources/localMysqlDs"-->
+      <!--pool-name="kitchensink-quickstart" enabled="true"-->
+      <!--use-java-context="true">-->
+      <!--<connection-url>jdbc:mysql://localhost:3306/test</connection-url>-->
+      <!--<driver>mysql</driver>-->
+      <!--<security>-->
+         <!--&lt;!&ndash;<user-name>brianhuang</user-name>&ndash;&gt;-->
+         <!--&lt;!&ndash;<password>huangking</password>&ndash;&gt;-->
+          <!--<user-name>root</user-name>-->
+          <!--<password>root</password>-->
+      <!--</security>-->
+   <!--</datasource>-->
+   <!--<driver name="mysql" module="com.mysqldatabase.mysql">-->
+      <!--<driver-class>com.mysql.jdbc.Driver</driver-class>-->
+      <!--<xa-datasource-class>com.mysql.jdbc.jdbc2.optional.MysqlXADataSource</xa-datasource-class>-->
+   <!--</driver>-->
+</datasources>
+ 
