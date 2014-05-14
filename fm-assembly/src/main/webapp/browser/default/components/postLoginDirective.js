@@ -10,21 +10,23 @@ define(['require', 'app', 'config', 'underscore'], function (require, app, confi
                     user.logOut();
                     $scope.$destroy();
                 };
-                configRoute(['m1', 'manageUsers']);
+                configRoute(['calendar', 'manageUsers']);
                 $scope.$on('$routeChangeStart', function() {
+                    console.log('start');
                     loader.show();
                 });
                 $scope.$on('$routeChangeSuccess', function() {
+                    console.log('stop');
                     loader.hide();
                 });
                 $scope.$on('session.timeout', function(e) {
-                   user.logOut(false);
+                    user.logOut(false);
                 });
                 function configRoute(cmps) {
                     var serviceName = 'service';
                     _.forEach(cmps, function (cmp) {
                         app.routeProvider.when('/' + cmp, {
-                            templateUrl: config.componentUrl + cmp + 'Template.html',
+                            templateUrl: config.componentUrl + cmp + '.html',
                             controller: [serviceName, '$injector', function (service, $injector) {
                                 $scope.service = service.$get($scope, $injector);
                                 $scope.topMenu = cmp;
@@ -32,6 +34,7 @@ define(['require', 'app', 'config', 'underscore'], function (require, app, confi
                             resolve: resolveFactory(serviceName, cmp)
                         });
                     });
+                    app.routeProvider.otherwise({redirectTo: '/' + cmps[0]});
                 }
 
                 function resolveFactory(serviceName, cmp) {
@@ -48,14 +51,7 @@ define(['require', 'app', 'config', 'underscore'], function (require, app, confi
             },
             templateUrl: config.componentUrl + 'postLoginTemplate.html',
             link: function (scope, el) {
-                var path = $location.path();
-                path == '/login' && (path = '/welcome');
                 $location.path('/');
-                el.ready(function () {
-                    scope.$apply(function () {
-                        $location.path(path);
-                    });
-                });
             }
         }
     }]);
