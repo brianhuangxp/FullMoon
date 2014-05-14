@@ -26,6 +26,9 @@ define(['angular', 'require', 'config', 'common', 'angular-route', 'angular-cook
                             elm.html('please wait...');
                         } else if (!hasLogin) {
                             require(['loginDirective'], function () {
+                                //quick login. todo remove
+                                scope.userName = scope.password = 'root';
+
                                 elm.append($compile('<fm-login/>')(scope));
                                 $location.path('login');
                             });
