@@ -1,11 +1,12 @@
 define(['app', 'config'], function (app, config) {
-    app.compileProvider.directive('listUsers', [function () {
+    var cmpName = 'listUsers';
+    app.compileProvider.directive(cmpName, [function () {
         return {
             restrict: 'A',
             scope: true,
             controller: function ($scope) {
             },
-            templateUrl: config.componentUrl + 'listUsers.html'
+            templateUrl: config.buildTemplatePath(cmpName)
         };
     }]);
 });

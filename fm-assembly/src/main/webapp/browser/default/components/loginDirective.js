@@ -7,7 +7,7 @@ define(['app', 'config'], function (app, config) {
                     user.login($scope.userName, $scope.password);
                 };
             },
-            templateUrl: config.componentUrl + 'loginTemplate.html'
+            templateUrl: config.buildTemplatePath('loginTemplate')
         }
     }]);
 });

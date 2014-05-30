@@ -21,7 +21,7 @@ define(['app', 'config'], function (app, config) {
             controllerAs: 'ctrl',
             link: function (scope, el, attrs, ctrl) {
             },
-            templateUrl: config.componentUrl + cmpName + '.html'
+            templateUrl: config.buildTemplatePath(cmpName)
         };
     }]);
 });

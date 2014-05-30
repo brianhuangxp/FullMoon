@@ -1,5 +1,6 @@
 define(['app', 'config'], function (app, config) {
-    app.compileProvider.directive('step2', [function () {
+    var cmpName = 'step2';
+    app.compileProvider.directive(cmpName, [function () {
         return {
             restrict: 'A',
             scope: true,
@@ -15,7 +16,7 @@ define(['app', 'config'], function (app, config) {
             link: function() {
 
             },
-            templateUrl: config.componentUrl + 'step2.html'
+            templateUrl: config.buildTemplatePath(cmpName)
         };
     }]);
 });

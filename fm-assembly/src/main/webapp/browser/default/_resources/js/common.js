@@ -119,7 +119,7 @@ define(['angular', 'config', 'underscore', 'require', 'api'], function (angular,
                             $log.info('css', css, 'has already loaded');
                             return;
                         }
-                        var cssPath = config.componentUrl + css + '.css';
+                        var cssPath = config.componentUrl + css + '.css?v=' + config.version;
                         if (document.createStyleSheet) {
                             document.createStyleSheet(cssPath);
                         } else {

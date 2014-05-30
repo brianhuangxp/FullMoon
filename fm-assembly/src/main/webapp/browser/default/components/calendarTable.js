@@ -6,7 +6,7 @@ define(['app', 'config'], function (app, config) {
             scope: true,
             controller: function ($scope) {
             },
-            templateUrl: config.componentUrl + cmpName + '.html'
+            templateUrl: config.buildTemplatePath(cmpName)
         };
     }]);
 });

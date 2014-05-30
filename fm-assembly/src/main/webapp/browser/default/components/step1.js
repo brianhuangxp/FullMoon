@@ -1,6 +1,6 @@
 define(['app', 'config', 'underscore'], function (app, config, _) {
-    var cmp = 'step1';
-    app.compileProvider.directive(cmp, [function () {
+    var cmpName = 'step1';
+    app.compileProvider.directive(cmpName, [function () {
         return {
             restrict: 'A',
             scope: true,
@@ -16,7 +16,7 @@ define(['app', 'config', 'underscore'], function (app, config, _) {
             controllerAs:'ctrl',
             link:function(scope, el, attrs) {
             },
-            templateUrl: config.componentUrl + cmp + '.html'
+            templateUrl: config.buildTemplatePath(cmpName)
         };
     }]);
 });

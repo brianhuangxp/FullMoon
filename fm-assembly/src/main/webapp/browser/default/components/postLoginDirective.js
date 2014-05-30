@@ -27,7 +27,7 @@ define(['require', 'app', 'config', 'underscore'], function (require, app, confi
                     var serviceName = 'service';
                     _.forEach(cmps, function (cmp) {
                         app.routeProvider.when('/' + cmp, {
-                            templateUrl: config.componentUrl + cmp + '.html',
+                            templateUrl: config.buildTemplatePath(cmp),
                             controller: [serviceName, '$injector', function (service, $injector) {
                                 $scope.service = service.$get($scope, $injector);
                                 $scope.topMenu = cmp;
@@ -50,7 +50,7 @@ define(['require', 'app', 'config', 'underscore'], function (require, app, confi
                     return resolve;
                 }
             },
-            templateUrl: config.componentUrl + 'postLoginTemplate.html',
+            templateUrl: config.buildTemplatePath('postLoginTemplate'),
             link: function (scope, el) {
             }
         }
