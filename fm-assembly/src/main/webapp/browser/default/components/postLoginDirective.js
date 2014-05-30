@@ -1,9 +1,9 @@
 define(['require', 'app', 'config', 'underscore'], function (require, app, config, _) {
-    app.compileProvider.directive('fmPostLogin', ['user', '$q', '$location', function (user, $q, $location) {
+    app.compileProvider.directive('fmPostLogin', ['user', '$q', '$location', '$timeout', function (user, $q, $location, $timeout) {
         return {
             restrict: 'E',
             scope: true,
-            controller: function ($scope, loader) {
+            controller: function ($scope, loader, $route) {
                 var userObj = user.getLoginUser();
                 $scope.userName = userObj.name;
                 $scope.logOut = function () {
@@ -11,6 +11,7 @@ define(['require', 'app', 'config', 'underscore'], function (require, app, confi
                     $scope.$destroy();
                 };
                 configRoute(['calendar', 'manageUsers']);
+                $route.reload();
                 $scope.$on('$routeChangeStart', function() {
                     console.log('start');
                     loader.show();
@@ -51,7 +52,6 @@ define(['require', 'app', 'config', 'underscore'], function (require, app, confi
             },
             templateUrl: config.componentUrl + 'postLoginTemplate.html',
             link: function (scope, el) {
-                $location.path('/');
             }
         }
     }]);

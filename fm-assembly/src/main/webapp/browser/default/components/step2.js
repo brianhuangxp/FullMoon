@@ -5,10 +5,10 @@ define(['app', 'config'], function (app, config) {
             scope: true,
             controller: function ($scope, $element, $attrs) {
                 this.next = function() {
-                    $scope.$emit('next', $attrs);
+                    $scope.next();
                 };
                 this.back = function() {
-                    $scope.$emit('back', $attrs, 'new:step1');
+                    $scope.back('new:step1');
                 };
             },
             controllerAs: 'ctrl',

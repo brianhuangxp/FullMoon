@@ -5,16 +5,13 @@ define(['app', 'config', 'underscore'], function (app, config, _) {
             restrict: 'A',
             scope: true,
             controller: function ($scope, $element, $attrs) {
-                this.next = function() {
-                    var params = _.extend($attrs, {
-                        actionConfig: {  //override rules
-                            name: 'step2',    // can be function
-                            restore: false    // can be function
-                        }
+                this.next = function () {
+//                    $scope.next('new:step2');
+                    $scope.next({
+                        name: 'step2',    // can be function
+                        restore: true    // can be function
                     });
-                    var action = 'restore:step2';  // action has higher priority than actionConfig
-                    $scope.$emit('next', params, action);
-                };
+                }
             },
             controllerAs:'ctrl',
             link:function(scope, el, attrs) {

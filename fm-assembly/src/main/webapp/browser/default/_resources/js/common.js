@@ -135,23 +135,25 @@ define(['angular', 'config', 'underscore', 'require', 'api'], function (angular,
             };
         })
         .provider('popupMsg', function () {
-            function fn($compile, $rootScope) {
+            function fn($compile, $rootScope, $q) {
                 return {
                     alert: function (config) {
                         var scope = buildScope(config);
                         scope.title = 'alert';
                         display('fm-popup-alert', scope);
+                        return scope.deferred.promise;
                     },
                     confirm: function (config) {
                         var scope = buildScope(config);
                         scope.title = 'confirm';
                         display('fm-popup-confirm', scope);
+                        return scope.deferred.promise;
                     }
                 };
 
                 function buildScope(config) {
                     var msg = config.msg;
-                    var deferred = config.deferred;
+                    var deferred = $q.defer();
                     var scope = $rootScope.$new();
                     scope.deferred = deferred;
                     scope.msg = msg;
@@ -163,7 +165,7 @@ define(['angular', 'config', 'underscore', 'require', 'api'], function (angular,
                 }
             }
 
-            this.$get = ['$compile', '$rootScope', fn];
+            this.$get = ['$compile', '$rootScope', '$q', fn];
         })
         .directive('fmPopupAlert', function () {
             return {
@@ -183,7 +185,7 @@ define(['angular', 'config', 'underscore', 'require', 'api'], function (angular,
                     }
                 },
                 controllerAs: 'ctrl',
-                template: '<div fm-window fm-title="{{title}}">' +    //transclude
+                template: '<div fm-window fm-title="{{title}}">' + //transclude
                     ' <p ng-bind="msg"></p>' +
                     ' <div>' +
                     '   <button ng-click="ctrl.ok()" class="btn btn-primary">OK</button>' +
@@ -214,7 +216,7 @@ define(['angular', 'config', 'underscore', 'require', 'api'], function (angular,
                     }
                 },
                 controllerAs: 'ctrl',
-                template: '<div fm-window fm-title="{{title}}">' +  //transclude
+                template: '<div fm-window fm-title="{{title}}">' + //transclude
                     ' <p ng-bind="msg"></p>' +
                     ' <div>' +
                     '  <button ng-click="ctrl.no()" class="btn btn-primary">No</button>' +
@@ -438,10 +440,10 @@ define(['angular', 'config', 'underscore', 'require', 'api'], function (angular,
                     };
                     this.parseAction = parseAction;
 
-                    function onSwitch(e, params, ruleConfig) {
+                    function onSwitch(e, params) {
                         var action = e.name;
-                        var currentStepName = params.fmStepName;
-                        var actionConfig = parseAction(ruleConfig) || params.actionConfig || stepsConfig[currentStepName].rules[action];
+                        var currentStepName = params.stepName;
+                        var actionConfig = parseAction(params.actionConfig) || stepsConfig[currentStepName].rules[action];
                         if (actionConfig == null) {
                             throw Error("rule hasn't configured");
                         }
@@ -486,6 +488,16 @@ define(['angular', 'config', 'underscore', 'require', 'api'], function (angular,
                         oldScope && oldScope.$destroy();
                         oldEl && oldEl.remove();
                         var stepScope = scope.$new();
+                        var actionTypes = ['next', 'back'];
+                        _.forEach(actionTypes, function(actionType) {
+                            stepScope[actionType] = function(action) {
+                                var switchConfig = {
+                                    stepName: stepName,
+                                    actionConfig: action
+                                };
+                                stepScope.$emit(actionType, switchConfig);
+                            };
+                        });
                         var stepEl = $compile('<div ' + cmp + ' fm-step-name="' + stepName + '"></div>')(stepScope);
                         stepsConfig[stepName].el = stepEl;
                         stepsConfig[stepName].scope = stepScope;
@@ -498,7 +510,7 @@ define(['angular', 'config', 'underscore', 'require', 'api'], function (angular,
             }
 
             function parseAction(actionStr) {
-                if (actionStr == null) return null;
+                if (!_.isString(actionStr)) return actionStr;
                 var restore;
                 /^restore:/.test(actionStr) && (restore = true);
                 /^new:/.test(actionStr) && (restore = false);
@@ -541,7 +553,7 @@ define(['angular', 'config', 'underscore', 'require', 'api'], function (angular,
                 }
             };
         })
-        .factory('ajaxService', function ($http, $q, $rootScope,loader) {
+        .factory('ajaxService', function ($http, $q, $rootScope, loader) {
             // todo add client cache.
             return{
                 send: function (option) {
@@ -554,12 +566,13 @@ define(['angular', 'config', 'underscore', 'require', 'api'], function (angular,
                             data: option.requestData,
                             transformRequest: function(obj) {
                                 var str = [];
-                                for(var p in obj)
+                                for (var p in obj)
                                     str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
                                 return str.join("&");
                             }
                         }
-                    ).success(function (data, status, headers, config) {
+                    ).success(
+                        function (data, status, headers, config) {
                             if (data.status.statusCode) {
                                 deferred.resolve(data, status, headers, config);
                             } else {

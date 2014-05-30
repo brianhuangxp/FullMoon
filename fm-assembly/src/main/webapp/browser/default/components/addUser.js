@@ -10,13 +10,11 @@ define(['app', 'config'], function (app, config) {
                     $scope.$emit('close');
                 };
                 this.cancel = function () {
-                    closeDeferred = $q.defer();
                     //show confirm window
-                    popupMsg.confirm({
-                        msg: 'sure?',
-                        deferred: closeDeferred
+                    var promise = popupMsg.alert({
+                        msg: 'sure?'
                     });
-                    $scope.$emit('close', closeDeferred.promise);
+                    $scope.$emit('close', promise);
                 };
                 $scope.$emit('safeClose', this.cancel);
             }],
