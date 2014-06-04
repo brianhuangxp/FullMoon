@@ -1,6 +1,35 @@
 define(['angular', 'config', 'underscore', 'require', 'api'], function (angular, config, _, require) {
     'use strict';
     angular.module('myApp.common', [])
+        .directive('fmMain', function ($compile, user, $location) {
+            return {
+                restrict: 'E',
+                controller: function ($scope) {
+                    $scope.user = user; //used for watch
+                },
+                link: function (scope, elm, attrs) {
+                    user.checkLogin();
+                    scope.$watch('user.hasLogin()', function (hasLogin) {
+                        elm.empty();
+                        if (hasLogin === undefined) {
+                            // before checkLogin has completed
+                        } else if (!hasLogin) {
+                            require(['loginDirective'], function () {
+                                //quick login. todo remove
+                                scope.userName = scope.password = 'root';
+
+                                elm.append($compile('<fm-login/>')(scope));
+                                $location.path('login');
+                            });
+                        } else {
+                            require(['postLoginDirective'], function () {
+                                elm.append($compile('<fm-post-login/>')(scope));
+                            });
+                        }
+                    });
+                }
+            };
+        })
         .provider('user', function () {
             var isAdmin = false;
             var loginUser = null;
@@ -80,8 +109,17 @@ define(['angular', 'config', 'underscore', 'require', 'api'], function (angular,
                 };
             };
         })
+        .directive('spinLoader', function () {
+            return {
+                restrict: 'C',
+                link: function (scope, el, attrs) {
+                    el.addClass('fm-loader');
+                },
+                template: '<div class="loading"><div>Loading...</div></div>'
+            };
+        })
         .provider('loader', function () {
-            this.$get = function () {
+            this.$get = function ($compile, $rootScope) {
                 var counter = 0;
                 var dom = null;
                 return {
@@ -100,8 +138,8 @@ define(['angular', 'config', 'underscore', 'require', 'api'], function (angular,
 
                 function showLoader() {
                     dom = angular.element(document.createElement('div'));
-                    dom.addClass('fm-loader');
-                    angular.element(document.body).append(dom);
+                    dom.addClass('spinLoader');
+                    angular.element(document.body).append($compile(dom)($rootScope));
                 }
             };
         })
