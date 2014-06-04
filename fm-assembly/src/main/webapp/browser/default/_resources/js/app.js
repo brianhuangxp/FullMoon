@@ -1,10 +1,11 @@
-define(['angular', 'require', 'config', 'common', 'angular-route', 'angular-cookies'], function (angular, require, config) {
+define(['angular', 'require', 'config', 'providers', 'directives', 'angular-route', 'angular-cookies'], function (angular, require, config) {
     'use strict';
     var app = angular.module(config.appName, [
         'ngRoute',
         'ngCookies',
-        'myApp.api',
-        'myApp.common'
+        config.appName + '.api',
+        config.appName + '.providers',
+        config.appName + '.directives'
     ]).config(function (userProvider, $compileProvider, $controllerProvider, $routeProvider, $locationProvider) {
             userProvider.asAdmin();
             app.compileProvider = $compileProvider;

@@ -1,6 +1,6 @@
 define(['angular', 'config'], function (angular, config) {
     'use strict';
-    angular.module('myApp.api', [])
+    angular.module(config.appName + '.api', [])
         .provider('userApi', function () {
             this.$get = ['$cookies', '$http', '$q', '$timeout', 'loader', 'ajaxService', function ($cookies, $http, $q, $timeout, loader, ajaxService) {
                 return {
