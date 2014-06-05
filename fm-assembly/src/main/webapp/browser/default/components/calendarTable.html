@@ -1,1 +1,21 @@
-Canlendar Place Holder
+<div fm-css="calendarTable">
+    <div class="calendarTable-navigator-container">
+        <div ng-bind="date|date:'MMM yyyy'" class="calendarTable-currentMonth"></div>
+        <div class="calendarTable-navigator">
+            <div ng-click="ctrl.prevMonth()">&lt;</div>
+            <div ng-click="ctrl.nextMonth()">&gt;</div>
+        </div>
+    </div>
+    <div class="calendarTable-main">
+        <div class="calendarTable-header calendarTable-row">
+            <div ng-repeat="dateOfWeak in datesInWeak" ng-bind="dateOfWeak" class="calendarTable-dateCell">
+            </div>
+        </div>
+        <div class="calendarTable-body">
+            <div ng-repeat="weak in weaks" class="calendarTable-row">
+                <div ng-repeat="dayItem in weak" class="calendarTable-dateCell" ng-bind="dayItem.date|date:'dd'"
+                     ng-class="dayItem.className" ng-click="ctrl.clickDateItem(dayItem)"></div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -30,7 +30,7 @@ define(['angular', 'config', 'underscore', 'require', 'api'], function (angular,
                 }
             };
         })
-        .directive('spinLoader', function () {
+        .directive('fmSpinLoader', function () {
             return {
                 restrict: 'C',
                 link: function (scope, el, attrs) {

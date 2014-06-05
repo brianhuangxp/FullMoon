@@ -1,0 +1,44 @@
+.calendarTable-main {
+    width: 800px;
+}
+
+.calendarTable-dateCell {
+    display: inline-block;
+    width: 100px;
+    border-right: #326ca6 1px solid;
+    border-bottom: #326ca6 1px solid;
+}
+
+.calendarTable-outOfMonth {
+    color: gray;
+}
+
+.calendarTable-navigator-container > div, .calendarTable-navigator > div {
+    display: inline-block;
+}
+
+.calendarTable-header .calendarTable-dateCell {
+    font-weight: bold;
+    border-top: #326ca6 1px solid;
+}
+
+.calendarTable-body .calendarTable-dateCell {
+    height: 50px;
+}
+
+.calendarTable-dateCell:first-child {
+    border-left: 1px solid #326ca6;
+}
+
+.calendarTable-currentMonth{
+    width: 100px;
+}
+.calendarTable-navigator div {
+    color:  #326ca6;
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 10px;
+}
+.calendarTable-navigator-container {
+    margin-bottom: 9px;
+}

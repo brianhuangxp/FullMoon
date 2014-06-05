@@ -75,7 +75,7 @@ define(['angular', 'config', 'underscore', 'require', 'api'], function (angular,
 
                 function showLoader() {
                     dom = angular.element(document.createElement('div'));
-                    dom.addClass('spinLoader');
+                    dom.addClass('fmSpinLoader');
                     angular.element(document.body).append($compile(dom)($rootScope));
                 }
             };
@@ -178,6 +178,6 @@ define(['angular', 'config', 'underscore', 'require', 'api'], function (angular,
                     return deferred.promise;
                 }
             }
-
-        })
+        }
+    )
 });
