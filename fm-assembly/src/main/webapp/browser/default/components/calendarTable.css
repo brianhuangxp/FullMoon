@@ -4,6 +4,7 @@
 
 .calendarTable-dateCell {
     display: inline-block;
+    vertical-align: top;
     width: 100px;
     border-right: #326ca6 1px solid;
     border-bottom: #326ca6 1px solid;
@@ -41,4 +42,7 @@
 }
 .calendarTable-navigator-container {
     margin-bottom: 9px;
+}
+.calendarTable-event > div {
+    display: inline-block;
 }

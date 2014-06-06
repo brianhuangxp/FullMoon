@@ -13,8 +13,21 @@
         </div>
         <div class="calendarTable-body">
             <div ng-repeat="weak in weaks" class="calendarTable-row">
-                <div ng-repeat="dayItem in weak" class="calendarTable-dateCell" ng-bind="dayItem.date|date:'dd'"
-                     ng-class="dayItem.className" ng-click="ctrl.clickDateItem(dayItem)"></div>
+                <div ng-repeat="dayItem in weak" class="calendarTable-dateCell" calendar-table-event-receiver
+                     ng-class="dayItem.className" ng-click="ctrl.clickDateItem(dayItem)" date-string="{{dayItem.dateString}}">
+                    <div ng-bind="dayItem.date|date:'dd'"></div>
+                    <div ng-bind="dayItem.eventsNum || '' "></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="calendarTable-detail">
+        <div ng-bind="detail.date|date"></div>
+        <div>
+            <div ng-repeat="event in detail.events" class="calendarTable-event" calendar-table-event event-id="{{event.id}}"
+                    date-string="{{detail.dateString}}">
+                <div ng-bind="event.status"></div>
+                <div ng-bind="event.info"></div>
             </div>
         </div>
     </div>
