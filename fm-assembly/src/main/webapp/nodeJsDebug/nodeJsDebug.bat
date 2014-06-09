@@ -1,1 +1,1 @@
-node nodeJsDebug
+supervisor nodeJsDebug.js

@@ -1,0 +1,8 @@
+<div class="calendarTable-event">
+    <div><input type="checkbox" name="aa"/></div>
+    <div ng-mousedown="eventCtrl.startDrag($event)">Drag</div>
+    <div ng-click="eventCtrl.edit()">Edit</div>
+    <div ng-bind="event.status"></div>
+    <div ng-bind="event.description" ng-show="!editing"></div>
+    <textarea ng-model="event.description" ng-show="editing" class="ng-hide" ng-blur="editing = false"></textarea>
+</div>

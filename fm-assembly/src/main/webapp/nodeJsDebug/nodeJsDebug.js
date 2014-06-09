@@ -1,5 +1,8 @@
 var express = require('express');
+var bodyParser = require('body-parser');
+var ObjectID = require('mongodb').ObjectID;
 var app = express();
+app.use(bodyParser());
 
 //init db connection
 var MongoClient = require('mongodb').MongoClient;
@@ -49,8 +52,51 @@ app.get('/events/:user/:date', function(req, res) {
     });
 });
 
-app.post('/event/:id', function(req, res) {
+app.get('/events/:user/:date/reschedule/:newdate', function(req, res) {
+    var user = req.params.user;
+    var dateString = req.params.date;
+    var newDateString = req.params.newdate;
+    var criteria = {
+        owner: user,
+        dateString:dateString
+    };
+    var myCollection = db.collection('events');
+    myCollection.update(criteria, {$set:{dateString: newDateString}}, {multi: true}, function() {
+        res.json({success: true});
+    });
+});
+app.get('/event/:id/reschedule/:newdate', function(req, res) {
     var id = req.params.id;
+    var newDateString = req.params.newdate;
+    var criteria = {
+        _id: new ObjectID(id)
+    };
+    var myCollection = db.collection('events');
+    myCollection.update(criteria, {$set:{dateString: newDateString}}, function() {
+        res.json({success: true});
+    });
+});
+app.get('/event/:id/status/:status', function(req, res) {
+    var id = req.params.id;
+    var status = req.params.status;
+    var criteria = {
+        _id: new ObjectID(id)
+    };
+    var myCollection = db.collection('events');
+    myCollection.update(criteria, {$set:{status: status}}, function() {
+        res.json({success: true});
+    });
+});
+
+app.post('/event/description/:id', function(req, res) {
+    var id = req.params.id;
+    var criteria = {
+        _id: new ObjectID(id)
+    };
+    var myCollection = db.collection('events');
+    myCollection.update(criteria, {$set:{description: req.body.description}}, function() {
+        res.json({success: true});
+    });
 });
 
 app.listen(8089);

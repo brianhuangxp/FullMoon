@@ -1,11 +1,11 @@
-define(['app', 'config', 'underscore'], function (app, config, _) {
+define(['app', 'config', 'underscore', 'calendarTableEvent'], function (app, config, _) {
     var cmpName = 'calendarTable';
     app.compileProvider
         .directive(cmpName, function () {
         return {
             restrict: 'E',
             scope: true,
-            controller: function ($scope, calendarApi, $document) {
+            controller: function ($scope, calendarApi, $document, loader, $filter, user) {
                 $scope.date = new Date();
                 goFirstDateOfMonth(0);
                 $scope.datesInWeak = [
@@ -27,12 +27,15 @@ define(['app', 'config', 'underscore'], function (app, config, _) {
                             (function() {
                                 var date = goDate(curDate, curDay - day);
                                 daysOfCurWeak[curDay] = {
-                                    dateString: date.toDateString(),
+                                    dateString:getDateString(date),
                                     date: date,
                                     eventsNum: 0,
                                     className: (date.getMonth() == $scope.date.getMonth()) ? '' : cmpName + '-outOfMonth'
                                 };
-                                datesHash[date.toDateString()] = daysOfCurWeak[curDay];
+                                datesHash[getDateString(date)] = daysOfCurWeak[curDay];
+                                function getDateString(date) {
+                                    return $filter('date')(date, 'yyyyMMdd');
+                                }
                             })();
                         }
                         weaks.push(daysOfCurWeak);
@@ -43,24 +46,46 @@ define(['app', 'config', 'underscore'], function (app, config, _) {
                     }
 
                     $scope.weaks = weaks;
-                    calendarApi.listDatesOfMonth(weaks).then(function(o) {
-                        _.forEach(o, function(item) {
-                            var dateItem = datesHash[item.date.toDateString()];
-                            dateItem && (dateItem.eventsNum = item.eventsNum);
-                        });
-                    });
+                    loadDates();
                 });
+                function loadDates() {
+                    var weaks = $scope.weaks;
+                    loader.show();
+                    var listRequest = {
+                        from:weaks[0][0].dateString,
+                        to:weaks[weaks.length - 1][6].dateString,
+                        user: user.getLoginUser().name
+                    };
+                    _.each($scope.datesHash, function(item) {
+                        item.eventsNum = 0;
+                    });
+                    calendarApi.listDatesOfMonth(listRequest).then(function(o) {
+                        _.forEach(o, function(item) {
+                            var dateItem = $scope.datesHash[item.dateString];
+                            dateItem && (dateItem.eventsNum = item.count);
+                        });
+                        loader.hide();
+                    });
+                }
 
-                this.clickDateItem = function(dateItem) {
-                    calendarApi.getDateInfo(dateItem.date).then(function(o) {
+                this.clickDateItem = showDateDetail;
+                function showDateDetail(dateString) {
+                    var dateItem = $scope.datesHash[dateString];
+                    var request = {
+                        user: user.getLoginUser().name,
+                        date: dateItem.dateString
+                    };
+                    calendarApi.getDateInfo(request).then(function(o) {
                         $scope.detail = {
                             date: dateItem.date,
-                            events: o.events,
+                            events: o,
                             dateString: dateItem.dateString
                         };
+                        console.log(o);
                         console.log($scope.detail);
                     });
-                };
+                }
+
                 this.prevMonth = function() {
                     goFirstDateOfMonth(-1);
                 };
@@ -74,11 +99,18 @@ define(['app', 'config', 'underscore'], function (app, config, _) {
                     return $scope.currentEvent;
                 };
                 this.addCurrentEvent = function(dateString) {
-                    var dateItem = $scope.datesHash[dateString];
-                    if ($scope.currentEvent && $scope.currentEvent.dateString != dateString) {
-                        dateItem.eventsNum++;
-                        $scope.$digest();
+                    var currentEvent = this.getCurrentEvent();
+                    if (currentEvent == null) {
+                        return;
                     }
+                    var request = {
+                        id: currentEvent.id,
+                        date: dateString
+                    };
+                    calendarApi.rescheduleEvent(request).then(function() {
+                        loadDates();
+                        showDateDetail(currentEvent.dateString)
+                    });
                 };
                 function goFirstDateOfMonth(diffMonth) {
                     var curDate = $scope.date;
@@ -101,56 +133,12 @@ define(['app', 'config', 'underscore'], function (app, config, _) {
             templateUrl: config.buildTemplatePath(cmpName)
         };
     })
-        .directive(cmpName + 'Event', function($document) {
-            return {
-                restrict: 'A',
-                require: '^' + cmpName,
-                scope: true,
-                controller: function($scope) {
-                    console.log($scope)
-                },
-                controllerAs: 'ctrl',
-                link: function(scope, el, attrs, parentCtrl) {
-                    el.on('mousedown', function(event) {
-                        event.preventDefault();
-                        parentCtrl.setCurrentEvent(
-                            {
-                                dateString: attrs.dateString,
-                                id:attrs.eventId
-                            }
-                        );
-                        scope.movingel = el.clone();
-                        scope.movingel.css({
-                            position: 'fixed'
-                        });
-                        angular.element(document.body).append(scope.movingel);
-                        $document.on('mousemove', moveFn);
-                        $document.one('mouseup', function() {
-                            parentCtrl.setCurrentEvent(null);
-                            scope.movingel && scope.movingel.remove();
-                            scope.movingel = null;
-                            $document.off('mousemove', moveFn);
-                        });
-                        function moveFn(event) {
-                            var movingel = scope.movingel;
-                            if (movingel == null) return;
-                            // plus 1 to avoid fixed position element mask the receiver element
-                            var y = event.pageY + 1;
-                            var x = event.pageX + 1;
-                            movingel.css({
-                                top: y + 'px',
-                                left:  x + 'px'
-                            });
-                        }
-                    });
-                }
-            };
-        })
         .directive(cmpName + 'EventReceiver', function($document) {
             return {
                 restrict: 'A',
                 require: '^' + cmpName,
                 controller: function($scope) {
+
                 },
                 link: function(scope, el, attrs, parentCtrl) {
                     el.on('mouseup', function(event) {

@@ -42,32 +42,34 @@ define(['angular', 'config'], function (angular, config) {
             }];
         })
         .provider('calendarApi', function () {
-            this.$get = ['$cookies', '$http', '$q', '$timeout', 'loader', function ($cookies, $http, $q, $timeout, loader) {
+            this.$get = function (loader, $q, $resource, $http) {
                 return {
-                    listDatesOfMonth: function (year, month) {
-                        var deferred = $q.defer();
-                        loader.show();
-                        $timeout(function() {
-                            deferred.resolve([
-                                {date: new Date(), eventsNum: 3}
-                            ]);
-                            loader.hide();
-                        }, 1000);
-                        return deferred.promise;
+                    listDatesOfMonth: function (request) {
+                        var Events = $resource('/events/:user/:from/:to');
+                        return Events.query({
+                            user: request.user,
+                            from: request.from,
+                            to: request.to
+                        }).$promise;
                     },
-                    getDateInfo: function(year, month, date) {
-                        var deferred = $q.defer();
-                        loader.show();
-                        $timeout(function() {
-                            deferred.resolve({events: [
-                                {info: 'test1', status: 0, id: 1},
-                                {info: 'test2', status: 1, id: 2}
-                            ]});
-                            loader.hide();
-                        }, 1000);
-                        return deferred.promise;
+                    getDateInfo: function(request) {
+                        var Events = $resource('/events/:user/:date');
+                        return Events.query({
+                            user: request.user,
+                            date: request.date
+                        }).$promise;
+                    },
+                    rescheduleEvent: function(request) {
+                        var Events = $resource('/event/:id/reschedule/:date');
+                        return Events.get({
+                            id: request.id,
+                            date: request.date
+                        }).$promise;
+                    },
+                    updateEventDesciption: function(request) {
+                        return $http.post('/event/description/' + request.id, {description: request.description});
                     }
                 }
-            }];
+            }
         });
 });

@@ -1,8 +1,9 @@
-define(['angular', 'require', 'config', 'providers', 'directives', 'angular-route', 'angular-cookies'], function (angular, require, config) {
+define(['angular', 'require', 'config', 'providers', 'directives', 'angular-route', 'angular-cookies', 'angular-resource'], function (angular, require, config) {
     'use strict';
     var app = angular.module(config.appName, [
         'ngRoute',
         'ngCookies',
+        'ngResource',
         config.appName + '.api',
         config.appName + '.providers',
         config.appName + '.directives'
