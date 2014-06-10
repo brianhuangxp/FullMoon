@@ -48,6 +48,9 @@ define(['app', 'config', 'underscore', 'calendarTableEvent'], function (app, con
                     $scope.weaks = weaks;
                     loadDates();
                 });
+
+
+                this.clickDateItem = showDateDetail;
                 function loadDates() {
                     var weaks = $scope.weaks;
                     loader.show();
@@ -68,7 +71,6 @@ define(['app', 'config', 'underscore', 'calendarTableEvent'], function (app, con
                     });
                 }
 
-                this.clickDateItem = showDateDetail;
                 function showDateDetail(dateString) {
                     var dateItem = $scope.datesHash[dateString];
                     var request = {
@@ -83,8 +85,15 @@ define(['app', 'config', 'underscore', 'calendarTableEvent'], function (app, con
                         };
                         console.log(o);
                         console.log($scope.detail);
+                        $scope.currentDateItem = dateItem;
                     });
                 }
+
+                function refresh() {
+                    loadDates();
+                    showDateDetail($scope.currentDateItem.dateString);
+                }
+                this.refresh = refresh;
 
                 this.prevMonth = function() {
                     goFirstDateOfMonth(-1);
@@ -98,7 +107,8 @@ define(['app', 'config', 'underscore', 'calendarTableEvent'], function (app, con
                 this.getCurrentEvent = function() {
                     return $scope.currentEvent;
                 };
-                this.addCurrentEvent = function(dateString) {
+
+                this.rescheduleCurrentEvent = function(dateString) {
                     var currentEvent = this.getCurrentEvent();
                     if (currentEvent == null) {
                         return;
@@ -108,8 +118,18 @@ define(['app', 'config', 'underscore', 'calendarTableEvent'], function (app, con
                         date: dateString
                     };
                     calendarApi.rescheduleEvent(request).then(function() {
-                        loadDates();
-                        showDateDetail(currentEvent.dateString)
+                        refresh();
+                    });
+                };
+                this.addNewEvent = function() {
+                    var request = {
+                        user: user.getLoginUser().name,
+                        date: $scope.currentDateItem.dateString,
+                        description: $scope.newEventDesc
+                    };
+                    calendarApi.addNewEvent(request).then(function() {
+                        refresh();
+                        $scope.newEventDesc = '';
                     });
                 };
                 function goFirstDateOfMonth(diffMonth) {
@@ -142,7 +162,8 @@ define(['app', 'config', 'underscore', 'calendarTableEvent'], function (app, con
                 },
                 link: function(scope, el, attrs, parentCtrl) {
                     el.on('mouseup', function(event) {
-                        parentCtrl.addCurrentEvent(attrs.dateString)
+                        var newDate = attrs.dateString;
+                        parentCtrl.rescheduleCurrentEvent(newDate);
                     });
                 }
             };

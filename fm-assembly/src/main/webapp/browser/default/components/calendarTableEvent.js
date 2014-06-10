@@ -30,6 +30,8 @@ define(['app', 'config', 'underscore'], function (app, config, _) {
                             calendarApi.updateEventDesciption(request);
                         }
                     });
+                    $scope.calendarApi = calendarApi;
+
                 },
                 controllerAs: 'eventCtrl',
                 link: function(scope, el, attrs, parentCtrl) {
@@ -67,8 +69,18 @@ define(['app', 'config', 'underscore'], function (app, config, _) {
 
                         this.edit = function(id) {
                             console.log(id)
-                        }
+                        };
+
                     };
+                    scope.eventCtrl.deleteEvent = function() {
+                        var event = scope.event;
+                        var request = {
+                            id: event._id
+                        };
+                        scope.calendarApi.deleteEvent(request).then(function() {
+                            parentCtrl.refresh();
+                        });
+                    }
                 },
                 templateUrl: config.buildTemplatePath(cmpName)
             };

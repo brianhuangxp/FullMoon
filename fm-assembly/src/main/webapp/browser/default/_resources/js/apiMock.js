@@ -66,8 +66,17 @@ define(['angular', 'config'], function (angular, config) {
                             date: request.date
                         }).$promise;
                     },
+                    deleteEvent: function(request) {
+                        var Events = $resource('/event/:id');
+                        return Events.delete({
+                            id: request.id
+                        }).$promise;
+                    },
                     updateEventDesciption: function(request) {
                         return $http.post('/event/description/' + request.id, {description: request.description});
+                    },
+                    addNewEvent: function(request) {
+                        return $http.post('/event/new/', {date: request.date, description: request.description,  user: request.user});
                     }
                 }
             }

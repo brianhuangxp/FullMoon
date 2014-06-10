@@ -98,5 +98,27 @@ app.post('/event/description/:id', function(req, res) {
         res.json({success: true});
     });
 });
+app.delete('/event/:id', function(req, res) {
+    var id = req.params.id;
+    var criteria = {
+        _id: new ObjectID(id)
+    };
+    var myCollection = db.collection('events');
+    myCollection.remove(criteria, function() {
+        res.json({success: true});
+    });
+});
+app.post('/event/new', function(req, res) {
+    var myCollection = db.collection('events');
+    var doc = {
+        status: 0,
+        dateString: req.body.date,
+        description:  req.body.description,
+        owner:  req.body.user
+    };
+    myCollection.insert(doc, {safe: true}, function() {
+        res.json({success: true});
+    });
+});
 
 app.listen(8089);
