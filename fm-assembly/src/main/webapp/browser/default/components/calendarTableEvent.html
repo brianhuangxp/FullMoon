@@ -2,7 +2,7 @@
     <div ng-mousedown="eventCtrl.startDrag($event)">Drag</div>
     <div ng-mousedown="eventCtrl.deleteEvent()">Delete</div>
     <div ng-click="eventCtrl.edit()">Edit</div>
-    <div ng-bind="event.status"></div>
+    <div ng-bind="event.status==1?'Done':'Open'" ng-click="eventCtrl.toggleStatus();"></div>
     <div ng-bind="event.description" ng-show="!editing"></div>
-    <textarea ng-model="event.description" ng-show="editing" class="ng-hide" ng-blur="editing = false"></textarea>
+    <textarea ng-model="event.description" ng-show="editing" class="ng-hide" ng-blur="editing = false" ></textarea>
 </div>

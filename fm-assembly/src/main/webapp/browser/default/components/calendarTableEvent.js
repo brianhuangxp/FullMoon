@@ -7,11 +7,9 @@ define(['app', 'config', 'underscore'], function (app, config, _) {
                 restrict: 'A',
                 require: '^' + parentCmp,
                 scope: true,
-                controller: function($scope, $element, $attrs, $timeout, calendarApi) {
+                controller: function($scope, $element, $attrs, $timeout, calendarApi, popupMsg) {
                     $scope.editing = false;
-                    $scope.eventCtrl = this;
                     this.edit = function() {
-                        var id = $attrs.eventId;
                         $scope.editing = true;
                         $timeout(function() {
                             $element.find('textarea')[0].focus();
@@ -30,33 +28,28 @@ define(['app', 'config', 'underscore'], function (app, config, _) {
                             calendarApi.updateEventDesciption(request);
                         }
                     });
-                    $scope.calendarApi = calendarApi;
-
-                },
-                controllerAs: 'eventCtrl',
-                link: function(scope, el, attrs, parentCtrl) {
-                    scope.eventCtrl.startDrag = function(event) {
+                    this.startDrag = function(event) {
                         event.preventDefault();
-                        parentCtrl.setCurrentEvent(
+                        $scope.ctrl.setCurrentEvent(
                             {
-                                dateString: attrs.dateString,
-                                id:attrs.eventId
+                                dateString: $attrs.dateString,
+                                id: $attrs.eventId
                             }
                         );
-                        scope.movingel = el.clone();
-                        scope.movingel.css({
+                        $scope.movingel = $element.clone();
+                        $scope.movingel.css({
                             position: 'fixed'
                         });
-                        angular.element(document.body).append(scope.movingel);
+                        angular.element(document.body).append($scope.movingel);
                         $document.on('mousemove', moveFn);
                         $document.one('mouseup', function() {
-                            parentCtrl.setCurrentEvent(null);
-                            scope.movingel && scope.movingel.remove();
-                            scope.movingel = null;
+                            $scope.ctrl.setCurrentEvent(null);
+                            $scope.movingel && $scope.movingel.remove();
+                            $scope.movingel = null;
                             $document.off('mousemove', moveFn);
                         });
                         function moveFn(event) {
-                            var movingel = scope.movingel;
+                            var movingel = $scope.movingel;
                             if (movingel == null) return;
                             // plus 1 to avoid fixed position element mask the receiver element
                             var y = event.pageY + 1;
@@ -72,15 +65,38 @@ define(['app', 'config', 'underscore'], function (app, config, _) {
                         };
 
                     };
-                    scope.eventCtrl.deleteEvent = function() {
-                        var event = scope.event;
+                    this.deleteEvent = function() {
+                        var event = $scope.event;
                         var request = {
                             id: event._id
                         };
-                        scope.calendarApi.deleteEvent(request).then(function() {
-                            parentCtrl.refresh();
+                        popupMsg.confirm({
+                            msg: 'sure?'
+                        }).then(
+                            function() {
+                                return calendarApi.deleteEvent(request)
+                            }
+                        ).then(
+                            function() {
+                                $scope.ctrl.refresh();
+                            }
+                        );
+
+                    };
+                    this.toggleStatus = function() {
+                        var event = $scope.event;
+                        var request = {
+                            id: event._id,
+                            status: +event.status ? 0 : 1
+                        };
+                        calendarApi.updateStatus(request).then(function() {
+                            $scope.ctrl.clickDateItem();
                         });
                     }
+                },
+                controllerAs: 'eventCtrl',
+                link: function(scope, el, attrs) {
+
                 },
                 templateUrl: config.buildTemplatePath(cmpName)
             };

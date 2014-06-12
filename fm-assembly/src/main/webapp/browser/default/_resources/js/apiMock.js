@@ -77,6 +77,13 @@ define(['angular', 'config'], function (angular, config) {
                     },
                     addNewEvent: function(request) {
                         return $http.post('/event/new/', {date: request.date, description: request.description,  user: request.user});
+                    },
+                    updateStatus: function(request) {
+                        var Events = $resource('event/:id/status/:status');
+                        return Events.get({
+                            id: request.id,
+                            status: request.status
+                        }).$promise;
                     }
                 }
             }

@@ -43,7 +43,16 @@
 .calendarTable-navigator-container {
     margin-bottom: 9px;
 }
-.calendarTable-event > div {
+.calendarTable-new-event {
+    margin-top: 15px;
+}
+.calendarTable-event >div, calendarTable-new-event > div {
     display: inline-block;
     vertical-align: top;
+}
+.calendarTable-dateCell-selected {
+    background: #8a8afb;
+}
+.calendarTable-dateCell-mouseOver {
+    background: #eded2e;
 }

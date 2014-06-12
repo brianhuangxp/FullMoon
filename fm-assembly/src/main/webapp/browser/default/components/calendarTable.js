@@ -16,6 +16,7 @@ define(['app', 'config', 'underscore', 'calendarTableEvent'], function (app, con
                 });
                 $scope.$watch('date', function() {
                     var weaks = [];
+                    $scope.detail = null;
                     var curDate = $scope.date;
                     var datesHash = {};
                     $scope.datesHash = datesHash;
@@ -72,6 +73,9 @@ define(['app', 'config', 'underscore', 'calendarTableEvent'], function (app, con
                 }
 
                 function showDateDetail(dateString) {
+                    if (null == dateString) {
+                        dateString = $scope.currentDateItem.dateString;
+                    }
                     var dateItem = $scope.datesHash[dateString];
                     var request = {
                         user: user.getLoginUser().name,
@@ -83,9 +87,9 @@ define(['app', 'config', 'underscore', 'calendarTableEvent'], function (app, con
                             events: o,
                             dateString: dateItem.dateString
                         };
-                        console.log(o);
-                        console.log($scope.detail);
+                        $scope.currentDateItem && ($scope.currentDateItem.selectedClassName = '');
                         $scope.currentDateItem = dateItem;
+                        dateItem.selectedClassName = 'calendarTable-dateCell-selected';
                     });
                 }
 
@@ -93,6 +97,7 @@ define(['app', 'config', 'underscore', 'calendarTableEvent'], function (app, con
                     loadDates();
                     showDateDetail($scope.currentDateItem.dateString);
                 }
+
                 this.refresh = refresh;
 
                 this.prevMonth = function() {
@@ -164,6 +169,14 @@ define(['app', 'config', 'underscore', 'calendarTableEvent'], function (app, con
                     el.on('mouseup', function(event) {
                         var newDate = attrs.dateString;
                         parentCtrl.rescheduleCurrentEvent(newDate);
+                    });
+                    var highlightClass = 'calendarTable-dateCell-mouseOver';
+
+                    el.on('mouseenter', function(event) {
+                        el.addClass(highlightClass)
+                    });
+                    el.on('mouseleave', function(event) {
+                        el.removeClass(highlightClass)
                     });
                 }
             };

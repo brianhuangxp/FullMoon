@@ -14,7 +14,8 @@
         <div class="calendarTable-body">
             <div ng-repeat="weak in weaks" class="calendarTable-row">
                 <div ng-repeat="dayItem in weak" class="calendarTable-dateCell" calendar-table-event-receiver
-                     ng-class="dayItem.className" ng-click="ctrl.clickDateItem(dayItem.dateString)"
+                     ng-class="[dayItem.className, dayItem.selectedClassName]"
+                     ng-click="ctrl.clickDateItem(dayItem.dateString)"
                      date-string="{{dayItem.dateString}}">
                     <div ng-bind="dayItem.date|date:'dd'"></div>
                     <div ng-bind="dayItem.eventsNum || '' "></div>
@@ -22,14 +23,14 @@
             </div>
         </div>
     </div>
-    <div class="calendarTable-detail">
+    <div class="calendarTable-detail" ng-show="detail">
         <div ng-bind="detail.date|date"></div>
         <div>
             <div ng-repeat="event in detail.events" calendar-table-event event-id="{{event._id}}"
                  date-string="{{detail.dateString}}">
             </div>
-            <div class="calendarTable-event">
-                <textarea ng-model="newEventDesc"></textarea>
+            <div class="calendarTable-new-event">
+                <textarea cols="30" rows="3" ng-model="newEventDesc" placeholder="Type your new event here."></textarea>
                 <button ng-click="ctrl.addNewEvent()">Add</button>
             </div>
         </div>
