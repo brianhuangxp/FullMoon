@@ -120,5 +120,15 @@ app.post('/event/new', function(req, res) {
         res.json({success: true});
     });
 });
+app.post('/events', function(req, res) {
+    var myCollection = db.collection('events');
+    var criteria = {
+        description: {'$regex': req.body.queryWords},
+        owner:  req.body.user
+    };
+    myCollection.find(criteria).sort({dateString: 1}).toArray(function(err, items) {
+        res.json(items);
+    });
+});
 
 app.listen(8089);

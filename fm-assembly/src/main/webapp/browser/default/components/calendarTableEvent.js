@@ -85,18 +85,23 @@ define(['app', 'config', 'underscore'], function (app, config, _) {
                     };
                     this.toggleStatus = function() {
                         var event = $scope.event;
+                        event.status = +event.status ? 0 : 1;
                         var request = {
                             id: event._id,
-                            status: +event.status ? 0 : 1
+                            status: event.status
                         };
                         calendarApi.updateStatus(request).then(function() {
-                            $scope.ctrl.clickDateItem();
                         });
                     }
                 },
                 controllerAs: 'eventCtrl',
                 link: function(scope, el, attrs) {
-
+                    el.on('mouseover', function() {
+                        el.toggleClass('calendarTable-event-mouseover');
+                    });
+                     el.on('mouseout', function() {
+                        el.toggleClass('calendarTable-event-mouseover');
+                    })
                 },
                 templateUrl: config.buildTemplatePath(cmpName)
             };

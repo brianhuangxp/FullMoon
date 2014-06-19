@@ -1,10 +1,23 @@
 <div fm-css="calendarTable">
+    <div class="calendarTable-search">
+
+        <div class="calendarTable-search-box">
+           Search <input ng-model="queryWords" class="search-query"/>
+        </div>
+        <div class="calendarTable-search-results">
+               <div ng-repeat="item in queryResults" class="calendarTable-search-result">
+                   <div ng-bind="ctrl.getDateObj(item.dateString)|date" ng-click="ctrl.jumpToDate(item.dateString)"></div>
+               </div>
+        </div>
+
+    </div>
     <div class="calendarTable-navigator-container">
         <div ng-bind="date|date:'MMM yyyy'" class="calendarTable-currentMonth"></div>
         <div class="calendarTable-navigator">
             <div ng-click="ctrl.prevMonth()">&lt;</div>
             <div ng-click="ctrl.nextMonth()">&gt;</div>
         </div>
+        <div class="calendarTable-today btn btn-primary" ng-click="ctrl.goToToday()">Today</div>
     </div>
     <div class="calendarTable-main">
         <div class="calendarTable-header calendarTable-row">
@@ -15,7 +28,7 @@
             <div ng-repeat="weak in weaks" class="calendarTable-row">
                 <div ng-repeat="dayItem in weak" class="calendarTable-dateCell" calendar-table-event-receiver
                      ng-class="[dayItem.className, dayItem.selectedClassName]"
-                     ng-click="ctrl.clickDateItem(dayItem.dateString)"
+                     ng-click="ctrl.chooseDate(dayItem.dateString)"
                      date-string="{{dayItem.dateString}}">
                     <div ng-bind="dayItem.date|date:'dd'"></div>
                     <div ng-bind="dayItem.eventsNum || '' "></div>
@@ -31,7 +44,7 @@
             </div>
             <div class="calendarTable-new-event">
                 <textarea cols="30" rows="3" ng-model="newEventDesc" placeholder="Type your new event here."></textarea>
-                <button ng-click="ctrl.addNewEvent()">Add</button>
+                <div ng-click="ctrl.addNewEvent()" class="btn btn-primary calendarTable-new-event-add" ng-show="newEventDesc">Add</div>
             </div>
         </div>
     </div>

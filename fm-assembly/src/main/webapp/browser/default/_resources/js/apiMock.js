@@ -84,6 +84,9 @@ define(['angular', 'config'], function (angular, config) {
                             id: request.id,
                             status: request.status
                         }).$promise;
+                    },
+                    queryEvents: function(request) {
+                        return $http.post('/events', {queryWords: request.queryWords, user: request.user});
                     }
                 }
             }

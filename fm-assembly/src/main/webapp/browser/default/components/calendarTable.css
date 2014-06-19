@@ -31,28 +31,109 @@
     border-left: 1px solid #326ca6;
 }
 
-.calendarTable-currentMonth{
-    width: 100px;
+.calendarTable-currentMonth {
+    width: 65px;
 }
+
 .calendarTable-navigator div {
-    color:  #326ca6;
+    color: #285e8e;
     font-weight: bold;
     cursor: pointer;
-    margin-left: 10px;
+    margin-right: 9px;
 }
+
+.calendarTable-today {
+    margin-left: 9px;
+}
+
 .calendarTable-navigator-container {
-    margin-bottom: 9px;
+    margin: 9px 0;
 }
+
+.calendarTable-navigator-container >div {
+    margin-right: 12px;
+}
+
 .calendarTable-new-event {
     margin-top: 15px;
 }
+
 .calendarTable-event >div, calendarTable-new-event > div {
     display: inline-block;
     vertical-align: top;
 }
+
 .calendarTable-dateCell-selected {
-    background: #8a8afb;
+    background: #3276b1;
+    color: white;;
 }
+
 .calendarTable-dateCell-mouseOver {
-    background: #eded2e;
+    background: #FF8800;
+}
+
+.calendarTable-new-event-add {
+    vertical-align: top;
+}
+
+.calendarTable-search-result {
+    display: inline-block;
+    margin-left: 10px;
+    color: white;
+    border: 1px solid #3276b1;
+    border-radius: 6px;
+    background: #3276b1;
+    cursor: pointer;
+    padding: 0 3px;
+}
+.calendarTable-search-results {
+    margin: 6px 0;
+}
+.calendarTable-detail {
+    margin-top: 12px;
+}
+
+.calendarTable-event-drag {
+    cursor: move;
+}
+
+.calendarTable-event-drag, .calendarTable-event-del {
+    visibility: hidden;
+}
+
+.calendarTable-event-del, .calendarTable-event-status, .calendarTable-event-edit {
+    cursor: pointer;
+}
+
+.calendarTable-event-edit {
+    width: 580px;
+    overflow: hidden;
+    margin-left: 6px;
+}
+
+.calendarTable-event-status {
+    border: 1px solid #3276b1;
+    border-radius: 6px;
+    padding: 0 3px;
+    font-weight: bold;
+    color: #0763B3;
+    float: left;
+}
+
+.calendarTable-event-mouseover .calendarTable-event-del, .calendarTable-event-mouseover .calendarTable-event-drag {
+    visibility: visible;
+}
+
+.calendarTable-body .calendarTable-dateCell {
+    cursor: pointer;
+}
+
+.calendarTable-event {
+    margin: 3px 0;
+    overflow: hidden;
+}
+
+.calendarTable-search-box input {
+    border-radius: 15px;
+    padding: 0 9px;
 }

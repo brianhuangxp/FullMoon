@@ -5,16 +5,41 @@ define(['app', 'config', 'underscore', 'calendarTableEvent'], function (app, con
         return {
             restrict: 'E',
             scope: true,
-            controller: function ($scope, calendarApi, $document, loader, $filter, user) {
+            controller: function ($scope, calendarApi, $document, loader, $filter, user, $element) {
                 $scope.date = new Date();
                 goFirstDateOfMonth(0);
                 $scope.datesInWeak = [
                     'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'
                 ];
+                $scope.$watch('queryWords', function(queryWords) {
+                    if (null == queryWords || queryWords.length < 1) {
+                        $scope.queryResults = [];
+                        return;
+                    }
+                    var request = {
+                        queryWords: queryWords,
+                        user: user.getLoginUser().name
+                    };
+                    calendarApi.queryEvents(request).then(function(o) {
+                        $scope.queryResults = o.data;
+                    });
+                });
                 $scope.$watch('currentEvent', function() {
                     console.log($scope.currentEvent)
                 });
-                $scope.$watch('date', function() {
+
+                function formatDateString(dateString, modify) {
+                    modify = modify || {};
+                    return dateString.replace(/(\d{4})(\d{2})(\d{2})/, function(p1, p2, p3, p4) {
+                        return[p2,p3,(modify.date || p4)].join('-');
+                    });
+                }
+
+                this.getDateObj = function(dateString) {
+                    return new Date(formatDateString(dateString));
+                };
+
+                $scope.$watch('date.toDateString()', function() {
                     var weaks = [];
                     $scope.detail = null;
                     var curDate = $scope.date;
@@ -47,11 +72,24 @@ define(['app', 'config', 'underscore', 'calendarTableEvent'], function (app, con
                     }
 
                     $scope.weaks = weaks;
+                    if ($scope.currentDateString) {
+                        showDateDetail($scope.currentDateString);
+                    }
                     loadDates();
                 });
-
-
-                this.clickDateItem = showDateDetail;
+                this.goToToday = function() {
+                    this.jumpToDate($filter('date')(new Date(), 'yyyyMMdd'));
+                };
+                this.jumpToDate = function(dateString) {
+                    $scope.date = new Date(formatDateString(dateString, {date: '01'}));
+                    this.chooseDate(dateString); // how to make sure this happen after date change complete?
+                };
+                $scope.$watch('currentDateString', function(dateString) {
+                    showDateDetail(dateString);
+                });
+                this.chooseDate = function(dateString) {
+                    $scope.currentDateString = dateString;
+                };
                 function loadDates() {
                     var weaks = $scope.weaks;
                     loader.show();
@@ -74,9 +112,12 @@ define(['app', 'config', 'underscore', 'calendarTableEvent'], function (app, con
 
                 function showDateDetail(dateString) {
                     if (null == dateString) {
-                        dateString = $scope.currentDateItem.dateString;
+                        return;
                     }
                     var dateItem = $scope.datesHash[dateString];
+                    if (dateItem == null) {
+                        return;
+                    }
                     var request = {
                         user: user.getLoginUser().name,
                         date: dateItem.dateString
@@ -102,9 +143,11 @@ define(['app', 'config', 'underscore', 'calendarTableEvent'], function (app, con
 
                 this.prevMonth = function() {
                     goFirstDateOfMonth(-1);
+                    $scope.currentDateString = '';
                 };
                 this.nextMonth = function() {
                     goFirstDateOfMonth(1);
+                    $scope.currentDateString = '';
                 };
                 this.setCurrentEvent = function(event) {
                     $scope.currentEvent = event;
