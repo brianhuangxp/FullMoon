@@ -4,7 +4,11 @@ define(['app', 'config'], function (app, config) {
             restrict: 'E',
             controller: function ($scope, user) {
                 $scope.login = function () {
-                    user.login($scope.userName, $scope.password);
+                    user.login($scope.userName, $scope.password).then(function(o) {
+                        if (!o.data.success) {
+                            alert('fail');
+                        }
+                    });
                 };
             },
             templateUrl: config.buildTemplatePath('loginTemplate')

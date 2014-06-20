@@ -36,9 +36,10 @@ define(['app', 'config', 'underscore'], function (app, config, _) {
                                 id: $attrs.eventId
                             }
                         );
-                        $scope.movingel = $element.clone();
+                        $scope.movingel = angular.element('<div>' + $scope.event.description + '</div>');
                         $scope.movingel.css({
-                            position: 'fixed'
+                            position: 'fixed',
+                            width: '150px'
                         });
                         angular.element(document.body).append($scope.movingel);
                         $document.on('mousemove', moveFn);
@@ -99,7 +100,7 @@ define(['app', 'config', 'underscore'], function (app, config, _) {
                     el.on('mouseover', function() {
                         el.toggleClass('calendarTable-event-mouseover');
                     });
-                     el.on('mouseout', function() {
+                    el.on('mouseout', function() {
                         el.toggleClass('calendarTable-event-mouseover');
                     })
                 },

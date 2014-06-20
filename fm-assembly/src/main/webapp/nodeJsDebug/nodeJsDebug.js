@@ -1,8 +1,13 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
 var ObjectID = require('mongodb').ObjectID;
 var app = express();
 app.use(bodyParser());
+app.use(cookieParser());
+app.use(session({secret: '1234567890QWERTY'}));
+
 
 //init db connection
 var MongoClient = require('mongodb').MongoClient;
@@ -20,6 +25,34 @@ app.use('/resources', express.static(__dirname + '/../browser/default/_resources
 app.use('/components', express.static(__dirname + '/../browser/default/components/'));
 
 //serve rest api
+app.post('/login', function(req, res) {
+    var user = req.body.user;
+    var pass = req.body.pass;
+    var myCollection = db.collection('users');
+    req.session.user = null;
+    myCollection.find({user: user}).toArray(function(err, items) {
+
+        if (items[0] && items[0].pass == pass) {
+            req.session.user = items[0].user;
+            res.json({success: true});
+        } else {
+            res.json({success: false});
+        }
+    });
+});
+app.get('/login/check', function(req, res) {
+    var user = req.session.user;
+    if (user == null) {
+        res.json({success: false});
+    } else {
+        res.json({success: true, user: user});
+    }
+});
+app.get('/login/logout', function(req, res) {
+    var user = req.session.user;
+    req.session.user = null;
+    res.json({success: true, user: user});
+});
 app.get('/events/:user/:from/:to', function(req, res) {
     var user = req.params.user;
     var from = req.params.from;
@@ -29,9 +62,6 @@ app.get('/events/:user/:from/:to', function(req, res) {
         dateString:{$gte: from, $lte: to}
     };
     var myCollection = db.collection('events');
-    myCollection.find(criteria).toArray(function(err, items) {
-//        res.json(items);
-    });
     myCollection.group(['dateString'], criteria, {count: 0}, function (obj, prev) {
         prev.count++;
     }, function(err, results) {

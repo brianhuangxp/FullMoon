@@ -22,8 +22,9 @@ define(['angular', 'config', 'underscore', 'require', 'api'], function (angular,
                     },
                     checkLogin: function () {
                         userApi.checkLogin().then(function (o) {
-                            hasLogin = o.logined;
-                            loginUser = o.name;
+                            console.log('checkLogin', o.success);
+                            hasLogin = o.success;
+                            loginUser = o.user;
                         });
                     },
                     isAdmin: function () {
@@ -31,8 +32,8 @@ define(['angular', 'config', 'underscore', 'require', 'api'], function (angular,
                     },
                     login: function (user, pass) {
                         var promise = userApi.login(user, pass);
-                        promise.then(function () {
-                            hasLogin = true;
+                        promise.then(function (o) {
+                            hasLogin = o.data.success;
                             loginUser = user;
                             $cookies.user = user;
                         });

@@ -1,0 +1,11 @@
+{
+    "name": "fullMoon",
+    "version": "0.1.0",
+    "dependencies": {
+        "express": "",
+        "mongodb": "",
+        "body-parser": "",
+        "cookie-parser": "",
+        "express-session": ""
+    }
+}
