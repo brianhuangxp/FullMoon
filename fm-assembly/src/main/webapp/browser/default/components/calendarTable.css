@@ -1,11 +1,14 @@
 .calendarTable-main {
-    width: 800px;
+    width: 100%;
+    min-width: 705px;
+    margin: 0 auto;
 }
 
 .calendarTable-dateCell {
     display: inline-block;
     vertical-align: top;
-    width: 100px;
+    width: 14%;
+    min-width: 100px;
     border-right: #326ca6 1px solid;
     border-bottom: #326ca6 1px solid;
     color: #144661;
@@ -137,4 +140,17 @@
 .calendarTable-search-box input {
     border-radius: 15px;
     padding: 0 9px;
+}
+
+div.calendarTable-event-record {
+    display: block;
+    margin:  6px;
+}
+.calendarTable-event-record div {
+    display: inline-block;
+    margin-right: 3px;
+    vertical-align: middle;
+}
+.calendarTable-event-record audio {
+    vertical-align: middle;
 }

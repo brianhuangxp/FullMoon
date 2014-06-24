@@ -6,6 +6,7 @@ define(['app', 'config', 'underscore', 'calendarTableEvent'], function (app, con
             restrict: 'E',
             scope: true,
             controller: function ($scope, calendarApi, $document, loader, $filter, user, $element) {
+                $scope.recordStatus = {recording: false};
                 $scope.date = new Date();
                 goFirstDateOfMonth(0);
                 $scope.datesInWeak = [

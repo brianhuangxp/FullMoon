@@ -8,7 +8,7 @@ define(['angular', 'config'], function (angular, config) {
                         return $http.post('/login', {user: name, pass: pass});
                     },
                     checkLogin: function () {
-                       return $resource('/login/check').get({}).$promise;
+                        return $resource('/login/check').get({}).$promise;
                     },
                     logout: function () {
                         return $resource('/login/logout').get({}).$promise;
@@ -62,6 +62,15 @@ define(['angular', 'config'], function (angular, config) {
                     },
                     queryEvents: function(request) {
                         return $http.post('/events', {queryWords: request.queryWords, user: request.user});
+                    },
+                    uploadEventAudio: function(request) {
+                        var fd = new FormData();
+                        fd.append('audio', request.blob);
+                        fd.append('eventId', request.eventId);
+                        return $http.post('upload', fd, {
+                            transformRequest: angular.identity,
+                            headers: {'Content-Type': undefined}
+                        });
                     }
                 }
             }

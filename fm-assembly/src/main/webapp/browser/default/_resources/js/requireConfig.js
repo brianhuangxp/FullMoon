@@ -1,7 +1,7 @@
 var require;     // use require global variable, so that the request of main.js can also have a version control
 (function() {
     var version = '0.12';
-    var nodeJsDebug = false;
+    var nodeJsDebug = true;
     require = {
         baseUrl: 'components',
         paths: {
@@ -12,6 +12,7 @@ var require;     // use require global variable, so that the request of main.js 
             'angular-cookies': '../resources/js/lib/angular/angular-cookies.min',
             'angular-resource': '../resources/js/lib/angular/angular-resource.min',
             underscore: '../resources/js/lib/underscore/underscore-min',
+            recorderjs: '../resources/js/lib/recorderjs/recorder',
             directives: '../resources/js/directives',
             providers: '../resources/js/providers',
             api: '../resources/js/api' + (nodeJsDebug ? 'Mock' : ''),

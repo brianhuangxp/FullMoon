@@ -1,6 +1,8 @@
+var os = require('os');
 var express = require('express');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
+var formidable = require('formidable');
 var session = require('express-session');
 var ObjectID = require('mongodb').ObjectID;
 var app = express();
@@ -159,6 +161,28 @@ app.post('/events', function(req, res) {
     myCollection.find(criteria).sort({dateString: 1}).toArray(function(err, items) {
         res.json(items);
     });
+});
+app.post('/upload', function(req, res) {
+    var form = new formidable.IncomingForm();
+    form.parse(req, function(err, fields, files) {
+        var path = files.audio.path;
+        var eventId = fields.eventId;
+        var criteria = {
+            _id: new ObjectID(eventId)
+        };
+        var myCollection = db.collection('events');
+        var patharr = path.split('\\');
+        path = patharr[patharr.length - 1];
+        myCollection.update(criteria, {$set:{path: path}}, function() {
+            res.json({success: true, path: path});
+        });
+    });
+});
+app.get('/event/audio/:id', function(req, res) {
+    var id = req.params.id;
+    //todo security check
+    var path = os.tmpdir();
+    res.sendfile(path + '/' + id);
 });
 
 app.listen(8089);

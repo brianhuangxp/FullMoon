@@ -1,4 +1,4 @@
-define(['app', 'config', 'underscore'], function (app, config, _) {
+define(['app', 'config', 'underscore', 'recorderjs'], function (app, config, _) {
     var parentCmp = 'calendarTable';
     var cmpName = parentCmp + 'Event';
     app.compileProvider
@@ -60,11 +60,6 @@ define(['app', 'config', 'underscore'], function (app, config, _) {
                                 left:  x + 'px'
                             });
                         }
-
-                        this.edit = function(id) {
-                            console.log(id)
-                        };
-
                     };
                     this.deleteEvent = function() {
                         var event = $scope.event;
@@ -93,12 +88,80 @@ define(['app', 'config', 'underscore'], function (app, config, _) {
                         };
                         calendarApi.updateStatus(request).then(function() {
                         });
+                    };
+
+                    var audioRecorder;
+                    var timeout;
+                    var microphone;
+                    var inputPoint;
+                    var audioContext;
+                    var microphoneStream;
+
+                    this.toggleRecord = function() {
+                        if (!$scope.recording) {
+                            if ($scope.recordStatus.recording) {
+                                alert('occupied');
+                                return;
+                            }
+                            startRecording();
+                        } else {
+                            stopRecording();
+                        }
+                    };
+                    function startRecording() {
+                        $scope.recording = true;
+                        $scope.recordStatus.recording = true;
+                        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
+                        navigator.getUserMedia({audio:true}, gotStream, function(e) {
+                            console.log(e)
+                        });
+                    }
+
+                    function gotStream(stream) {
+                        window.AudioContext = window.AudioContext || window.webkitAudioContext;
+                        audioContext = config.audioContext;
+                        microphoneStream = stream;
+                        microphone = audioContext.createMediaStreamSource(stream);
+                        inputPoint = audioContext.createGain();
+                        audioRecorder = new Recorder(inputPoint);
+                        microphone.connect(inputPoint);
+                        inputPoint.connect(audioContext.destination);
+                        audioRecorder.record();
+                        timeout && clearTimeout(timeout);
+                        timeout = setTimeout(stopRecording, 10000);
+                    }
+
+                    function stopRecording() {
+                        audioContext = null;
+                        timeout && clearTimeout(timeout);
+                        if (audioRecorder == null) return;
+                        microphoneStream && microphoneStream.stop();
+                        microphone && microphone.disconnect();
+                        inputPoint && inputPoint.disconnect();
+                        audioRecorder.stop();
+                        audioRecorder.exportWAV(function(blob) {
+                            calendarApi.uploadEventAudio({
+                                blob: blob,
+                                eventId: $scope.event._id
+                            }).then(function(o) {
+                                    $element.find('audio')[0].src = window.URL.createObjectURL(blob);
+                                    $scope.event.path = o.data.path;
+                                    audioRecorder.stop();
+                                    $scope.recording = false;
+                                    $scope.recordStatus.recording = false;
+                                }
+                            );
+                        });
                     }
                 },
                 controllerAs: 'eventCtrl',
                 link: function(scope, el, attrs) {
                     el.on('mouseover', function() {
                         el.toggleClass('calendarTable-event-mouseover');
+                        var src = el.find('audio')[0].src;
+                        if (src == "") {
+                            el.find('audio')[0].src = '/event/audio/' + scope.event.path;
+                        }
                     });
                     el.on('mouseout', function() {
                         el.toggleClass('calendarTable-event-mouseover');

@@ -6,6 +6,7 @@
         "mongodb": "",
         "body-parser": "",
         "cookie-parser": "",
+        "formidable": "",
         "express-session": ""
     }
 }
