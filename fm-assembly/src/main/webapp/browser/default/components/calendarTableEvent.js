@@ -53,8 +53,8 @@ define(['app', 'config', 'underscore', 'recorderjs'], function (app, config, _) 
                             var movingel = $scope.movingel;
                             if (movingel == null) return;
                             // plus 1 to avoid fixed position element mask the receiver element
-                            var y = event.pageY + 1;
-                            var x = event.pageX + 1;
+                            var y = event.pageY - 10;
+                            var x = event.pageX + 10;
                             movingel.css({
                                 top: y + 'px',
                                 left:  x + 'px'
@@ -98,7 +98,7 @@ define(['app', 'config', 'underscore', 'recorderjs'], function (app, config, _) 
                     var microphoneStream;
 
                     this.toggleRecord = function() {
-                        if (!$scope.recording) {
+                        if (!$scope.recording) { // request recording
                             if ($scope.recordStatus.recording) {
                                 alert('occupied');
                                 return;
@@ -108,9 +108,19 @@ define(['app', 'config', 'underscore', 'recorderjs'], function (app, config, _) 
                             stopRecording();
                         }
                     };
-                    function startRecording() {
+                    function requestRecording() {
                         $scope.recording = true;
                         $scope.recordStatus.recording = true;
+                    }
+
+                    function finishRecording() {
+                        $scope.recording = false;
+                        $scope.recordStatus.recording = false;
+                        $scope.recordingInProgress = false;
+                    }
+
+                    function startRecording() {
+                        requestRecording();
                         navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
                         navigator.getUserMedia({audio:true}, gotStream, function(e) {
                             console.log(e)
@@ -118,6 +128,9 @@ define(['app', 'config', 'underscore', 'recorderjs'], function (app, config, _) 
                     }
 
                     function gotStream(stream) {
+                        $scope.$apply(function() {
+                            $scope.recordingInProgress = true;
+                        });
                         window.AudioContext = window.AudioContext || window.webkitAudioContext;
                         audioContext = config.audioContext;
                         microphoneStream = stream;
@@ -147,8 +160,7 @@ define(['app', 'config', 'underscore', 'recorderjs'], function (app, config, _) 
                                     $element.find('audio')[0].src = window.URL.createObjectURL(blob);
                                     $scope.event.path = o.data.path;
                                     audioRecorder.stop();
-                                    $scope.recording = false;
-                                    $scope.recordStatus.recording = false;
+                                    finishRecording();
                                 }
                             );
                         });

@@ -6,11 +6,15 @@
     <textarea ng-model="event.description" ng-show="editing" class="ng-hide" ng-blur="editing = false"></textarea>
 
     <div class="calendarTable-event-record">
-        <div ng-mousedown="eventCtrl.deleteEvent()" class="calendarTable-event-del">X</div>
-        <div ng-mousedown="eventCtrl.startDrag($event)" class="calendarTable-event-drag">Drag</div>
-        <div ng-bind="recording ? 'Stop' : 'Start'" ng-click="eventCtrl.toggleRecord()"></div>
+
         <audio controls ng-show="event.path"></audio>
-        <div controls ng-show="!event.path">No audio yet</audio>
+        <div controls ng-show="!event.path">No audio yet</div>
+        <div ng-click="eventCtrl.toggleRecord()"
+             class="calendarTable-event-manipulate-audio"
+             ng-class="recordingInProgress ? 'calendarTable-event-stop' : 'calendarTable-event-start'"></div>
+        <div ng-mousedown="eventCtrl.deleteEvent()" class="calendarTable-event-del"></div>
+        <div ng-mousedown="eventCtrl.startDrag($event)" class="calendarTable-event-drag"></div>
+
     </div>
 
 </div>

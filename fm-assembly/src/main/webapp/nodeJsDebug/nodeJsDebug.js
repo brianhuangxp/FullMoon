@@ -158,9 +158,27 @@ app.post('/events', function(req, res) {
         description: {'$regex': req.body.queryWords},
         owner:  req.body.user
     };
-    myCollection.find(criteria).sort({dateString: 1}).toArray(function(err, items) {
-        res.json(items);
-    });
+    myCollection.aggregate(
+        {
+            $match :criteria
+        },
+        {
+            $group : {
+                _id: "$dateString"
+            }
+        },
+        {
+            $sort: {
+                _id: 1
+            }
+        },
+        {
+            $project: {dateString: "$_id"}
+        },
+        function(err, items) {
+            res.json(items);
+        }
+    );
 });
 app.post('/upload', function(req, res) {
     var form = new formidable.IncomingForm();

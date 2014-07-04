@@ -12,6 +12,8 @@
     border-right: #326ca6 1px solid;
     border-bottom: #326ca6 1px solid;
     color: #144661;
+    padding: 3px;
+    transition: 0.5s ease;
 }
 
 .calendarTable-outOfMonth {
@@ -67,13 +69,32 @@
     vertical-align: top;
 }
 
+@-webkit-keyframes aSelect {
+   to {-webkit-transform: rotateX(360deg);}
+}
+@-webkit-keyframes aScale {
+   from {-webkit-transform: scale(0.1);}
+}
+
+@-webkit-keyframes aToRight {
+   from {left: -100%; }
+   to {left: 0; }
+}
+
 .calendarTable-dateCell-selected {
     background: #3276b1;
-    color: white;;
+    color: white;
+    -webkit-animation: aSelect 1s ease;
 }
 
 .calendarTable-dateCell-mouseOver {
     background: #FF8800;
+}
+
+.calendarTable-dateCell-mouseOver, .calendarTable-dateCell-selected {
+    font-weight: bold;
+    border-radius: 9px;
+    box-shadow: gray 1px 1px;
 }
 
 .calendarTable-new-event-add {
@@ -90,19 +111,37 @@
     cursor: pointer;
     padding: 0 3px;
 }
+
 .calendarTable-search-results {
     margin: 6px 0;
 }
+
 .calendarTable-detail {
     margin-top: 12px;
 }
 
 .calendarTable-event-drag {
     cursor: move;
+    background: url(/resources/images/drag.png) no-repeat 0 0;
 }
 
-.calendarTable-event-drag, .calendarTable-event-del {
+.calendarTable-event-del {
+    background: url(/resources/images/del.png) no-repeat 0 0;
+}
+
+.calendarTable-event-stop {
+    background: url(/resources/images/record-stop.png) no-repeat 0 0;
+}
+
+.calendarTable-event-start {
+    background: url(/resources/images/record-start.png) no-repeat 0 0;
+}
+
+.calendarTable-event-drag, .calendarTable-event-del, .calendarTable-event-manipulate-audio {
     visibility: hidden;
+    transition: 1s ease;
+    width: 24px;
+    height: 24px;
 }
 
 .calendarTable-event-del, .calendarTable-event-status, .calendarTable-event-edit {
@@ -124,7 +163,7 @@
     float: left;
 }
 
-.calendarTable-event-mouseover .calendarTable-event-del, .calendarTable-event-mouseover .calendarTable-event-drag {
+.calendarTable-event-mouseover .calendarTable-event-del, .calendarTable-event-mouseover .calendarTable-event-drag, .calendarTable-event-mouseover .calendarTable-event-manipulate-audio {
     visibility: visible;
 }
 
@@ -133,8 +172,20 @@
 }
 
 .calendarTable-event {
-    margin: 3px 0;
+    transition: 0.2s ease;
     overflow: hidden;
+    margin: 12px 0;
+    overflow: hidden;
+    border-left: 3px solid #0763B3;
+    padding-left: 6px;
+    position: relative;
+    -webkit-animation: aToRight 0.5s ease;
+}
+.calendarTable-row {
+     -webkit-animation: aScale 0.5s ease;
+}
+.calendarTable-event-mouseover .calendarTable-event {
+    border-left: 6px solid #FF8800;
 }
 
 .calendarTable-search-box input {
@@ -144,13 +195,15 @@
 
 div.calendarTable-event-record {
     display: block;
-    margin:  6px;
+    margin: 6px;
 }
+
 .calendarTable-event-record div {
     display: inline-block;
     margin-right: 3px;
     vertical-align: middle;
 }
+
 .calendarTable-event-record audio {
     vertical-align: middle;
 }
