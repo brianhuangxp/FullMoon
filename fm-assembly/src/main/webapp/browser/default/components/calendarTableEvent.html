@@ -1,7 +1,7 @@
 <div class="calendarTable-event">
     <div ng-bind="event.status==1?'Done':'Open'" ng-click="eventCtrl.toggleStatus();"
          class="calendarTable-event-status"></div>
-    <div ng-bind="event.description" ng-show="!editing" ng-click="eventCtrl.edit()"
+    <div ng-bind-html="desc" ng-show="!editing" ng-click="eventCtrl.edit()"
          class="calendarTable-event-edit"></div>
     <textarea ng-model="event.description" ng-show="editing" class="ng-hide" ng-blur="editing = false"></textarea>
 

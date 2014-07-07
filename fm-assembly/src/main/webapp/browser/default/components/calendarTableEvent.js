@@ -7,7 +7,7 @@ define(['app', 'config', 'underscore', 'recorderjs'], function (app, config, _) 
                 restrict: 'A',
                 require: '^' + parentCmp,
                 scope: true,
-                controller: function($scope, $element, $attrs, $timeout, calendarApi, popupMsg) {
+                controller: function($scope, $element, $attrs, $timeout, calendarApi, popupMsg, $sce) {
                     $scope.editing = false;
                     this.edit = function() {
                         $scope.editing = true;
@@ -108,6 +108,13 @@ define(['app', 'config', 'underscore', 'recorderjs'], function (app, config, _) 
                             stopRecording();
                         }
                     };
+                    $scope.$watch('event.description', function() {
+                        $scope.desc = $scope.event.description || '';
+                        if ($scope.queryWords) {
+                            $scope.desc = $sce.trustAsHtml($scope.desc.replace(new RegExp($scope.queryWords, "gi"), '<span class="calendarTable-event-hl">' + $scope.queryWords + '</span>'));
+                        }
+                    });
+
                     function requestRecording() {
                         $scope.recording = true;
                         $scope.recordStatus.recording = true;
@@ -167,7 +174,7 @@ define(['app', 'config', 'underscore', 'recorderjs'], function (app, config, _) 
                     }
                 },
                 controllerAs: 'eventCtrl',
-                link: function(scope, el, attrs) {
+                link: function(scope, el, attrs, ctrl) {
                     el.on('mouseover', function() {
                         el.toggleClass('calendarTable-event-mouseover');
                         var src = el.find('audio')[0].src;
@@ -177,7 +184,7 @@ define(['app', 'config', 'underscore', 'recorderjs'], function (app, config, _) 
                     });
                     el.on('mouseout', function() {
                         el.toggleClass('calendarTable-event-mouseover');
-                    })
+                    });
                 },
                 templateUrl: config.buildTemplatePath(cmpName)
             };

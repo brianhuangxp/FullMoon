@@ -110,6 +110,7 @@
     background: #3276b1;
     cursor: pointer;
     padding: 0 3px;
+     -webkit-animation: aScale 0.5s ease;
 }
 
 .calendarTable-search-results {
@@ -196,6 +197,12 @@
 div.calendarTable-event-record {
     display: block;
     margin: 6px;
+}
+span.calendarTable-event-hl {
+    color: #ffffff;
+    background: #FF8800;
+    border-radius: 6px;
+    font-weight: bold;
 }
 
 .calendarTable-event-record div {

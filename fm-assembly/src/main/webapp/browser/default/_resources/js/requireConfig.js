@@ -11,6 +11,7 @@ var require;     // use require global variable, so that the request of main.js 
             'angular-route': '../resources/js/lib/angular/angular-route.min',
             'angular-cookies': '../resources/js/lib/angular/angular-cookies.min',
             'angular-resource': '../resources/js/lib/angular/angular-resource.min',
+            'angular-sanitize': '../resources/js/lib/angular/angular-sanitize.min',
             underscore: '../resources/js/lib/underscore/underscore-min',
             recorderjs: '../resources/js/lib/recorderjs/recorder',
             directives: '../resources/js/directives',
@@ -23,6 +24,7 @@ var require;     // use require global variable, so that the request of main.js 
             'underscore': {'exports': '_'},
             'angular-route': { deps: ['angular']},
             'angular-cookies': { deps: ['angular']},
+            'angular-sanitize': { deps: ['angular']},
             'angular-resource': { deps: ['angular']}
         },
         version: version,

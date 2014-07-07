@@ -85,8 +85,8 @@ define(['app', 'config', 'underscore', 'calendarTableEvent'], function (app, con
                     $scope.date = new Date(formatDateString(dateString, {date: '01'}));
                     this.chooseDate(dateString); // how to make sure this happen after date change complete?
                 };
-                $scope.$watch('currentDateString', function(dateString) {
-                    showDateDetail(dateString);
+                $scope.$watchGroup(['currentDateString', 'queryWords'], function(newValues) {
+                    showDateDetail(newValues[0]);
                 });
                 this.chooseDate = function(dateString) {
                     $scope.currentDateString = dateString;
